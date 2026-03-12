@@ -1,3 +1,10 @@
+# HBnB Evolution – Technical Documentation (Part 1)
+
+
+This document provides the technical blueprint for the HBnB Evolution application, a simplified AirBnB‑like system. It compiles the architectural overview, business logic design, and API interaction flows. The goal is to guide implementation in later phases by ensuring clarity of design, consistency of rules, and a well‑defined layered architecture.
+
+## High‑Level Architecture
+The application follows a layered architecture with three main components: Presentation Layer, Business Logic Layer, and Persistence Layer. The facade pattern is used to simplify communication between layers.
 ```mermaid
 classDiagram
 class PresentationLayer {
