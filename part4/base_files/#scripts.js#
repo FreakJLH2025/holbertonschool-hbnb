@@ -58,16 +58,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: headers
             });
 
-            if (response.ok) {
-                const places = await response.json();
-		console.log("PLACES DATA");
+	    if (response.ok) {
+		const places = await response.json();
+
+		console.log("PLACES DATA:");
 		console.log(places);
-                displayPlaces(places);
-                setupFilter();
-            } else {
-                alert("Failed to fetch places");
-            }
-        } catch (error) {
+
+		displayPlaces(places);
+		setupFilter();
+	    }
+        } else {
+            alert("Failed to fetch places");
+        }
+    } catch (error) {
             alert("Error fetching places: " + error.message);
         }
     }
