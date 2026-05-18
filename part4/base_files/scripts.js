@@ -284,15 +284,23 @@ document.addEventListener("DOMContentLoaded", () => {
             "<ul>" + amenitiesList + "</ul>";
 
         const reviewsSection = document.getElementById("reviews");
+
         if (reviewsSection) {
+
             reviewsSection.innerHTML = "<h3>Reviews</h3>";
             if (place.reviews && place.reviews.length > 0) {
                 place.reviews.forEach(review => {
                     const card = document.createElement("div");
+                    const answer = fetch(API_URL + "/api/v1/users/" + review.user_id);
+                    const revuser = answer.json();
                     card.className = "review-card";
                     card.innerHTML =
-                        "<p>\"" + review.text + "\"</p>" +
-                        "<p>Rating: " + review.rating + "/5</p>";
+                    "<p>\"" + review.text + "\"</p>" +
+                    "<p>User: " + review.revuser + "</p>" +
+                    "<p>Rating: " + 
+                    "★".repeat(review.rating) +
+                    "☆".repeat(5 - review.rating) +
+                    "</p>";
                     reviewsSection.appendChild(card);
                 });
             } else {
