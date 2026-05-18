@@ -1,6 +1,13 @@
 const API_URL = "https://web-80-154-127.cod-us-east-1.hbtn.io";
 
 document.addEventListener("DOMContentLoaded", () => {
+    const token = getCookie("token");
+    const currentPage = window.location.pathname.split("/").pop();
+    const publicPages = ["login.html", "register.html"];
+    if (!token && !publicPages.includes(currentPage)) {
+    window.location.href = "login.html";
+}
+    const userGreeting = document.getElementById("user-greeting");
     const loginForm = document.getElementById("login-form");
     if (loginForm) {
         loginForm.addEventListener("submit", async (event) => {
@@ -30,7 +37,123 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    const registerForm = document.getElementById("register-form");
+
+    if (registerForm) {
+        registerForm.addEventListener("submit", async (event) => {
+    
+            event.preventDefault();
+    
+            const first_name = document.getElementById("first_name").value;
+            const last_name = document.getElementById("last_name").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+    
+            try {
+    
+                const response = await fetch(API_URL + "/api/v1/users/", {
+                    method: "POST",
+    
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+    
+                    body: JSON.stringify({
+                        first_name,
+                        last_name,
+                        email,
+                        password
+                    })
+                });
+    
+                if (response.ok) {
+    
+                    alert("Account created successfully!");
+                    window.location.href = "login.html";
+    
+                } else {
+    
+                    const errorData = await response.json();
+    
+                    alert(
+                        "Registration failed: " +
+                        (errorData.error || response.statusText)
+                    );
+                }
+    
+            } catch (error) {
+    
+                alert("Error: " + error.message);
+            }
+        });
+    }
+
+    async function loadUserGreeting() {
+
+        const userId = getCookie("user_id");
+        console.log(userId);
+        if (!userId) return;
+    
+        try {
+    
+            const response = await fetch(API_URL + "/api/v1/users/" + userId);
+            console.log(response.status);
+
+            if (response.ok) {
+    
+                const user = await response.json();
+                console.log(user);
+
+                if (userGreeting) {
+                    userGreeting.textContent =
+                        "Welcome, " + user.first_name;
+                }
+            }
+    
+        } catch (error) {
+    
+            console.log(error);
+        }
+    }
+
+    const registerLink = document.getElementById("register-link");
+    const logoutLink = document.getElementById("logout-link");
     const loginLink = document.getElementById("login-link");
+
+    if (token) {
+
+        if (loginLink) loginLink.style.display = "none";
+
+        if (registerLink) registerLink.style.display = "none";
+
+        if (logoutLink) logoutLink.style.display = "inline";
+
+        loadUserGreeting();
+
+    } else {
+
+        if (loginLink) loginLink.style.display = "inline";
+
+        if (registerLink) registerLink.style.display = "inline";
+
+        if (logoutLink) logoutLink.style.display = "none";
+
+        loadUserGreeting();
+    }
+
+    if (logoutLink) {
+
+        logoutLink.addEventListener("click", (event) => {
+    
+            event.preventDefault();
+    
+            document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+            document.cookie = "user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    
+            window.location.href = "login.html";
+        });
+    }
+
     const placesList = document.getElementById("places-list");
     const priceFilter = document.getElementById("price-filter");
 

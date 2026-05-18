@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Register</title>
+
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/png" href="images/icon.png">
 </head>
+
 <body>
+
     <header>
         <img src="images/logo.png" alt="App Logo" class="logo">
         <nav>
@@ -19,23 +22,33 @@
         </nav>
     </header>
 
-    <main>
-        <form id="login-form" class="form login-form">
-            <h2>Login</h2>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            
-            <button type="submit">Login</button>
-        </form>
-    </main>
+<main>
+    <form id="register-form" class="form login-form">
 
-    <footer>
-        <p>All rights reserved © 2026</p>
-    </footer>
+        <h2>Create Account</h2>
 
-    <script src="scripts.js"></script>
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" required>
+
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" required>
+
+        <button type="submit">Register</button>
+
+    </form>
+</main>
+
+<footer>
+    <p>All rights reserved © 2026</p>
+</footer>
+
+<script src="scripts.js"></script>
+
 </body>
 </html>
