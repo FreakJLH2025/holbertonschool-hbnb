@@ -1,4 +1,4 @@
-const API_URL = "https://web-80-30-173.cod-us-east-1.hbtn.io";
+const API_URL = "https://web-80-158-58.cod-us-east-1.hbtn.io";
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("SCRIPT RUNNING");
@@ -283,12 +283,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function displayPlaceDetails(place) {
+    async function displayPlaceDetails(place) {
         const amenitiesList = place.amenities.map(a => "<li>" + a.name + "</li>").join("");
 
         placeDetailsSection.innerHTML =
             "<h2>" + place.name + "</h2>" +
-            "<p>Price: $" + place.price + " per night</p>" +
+            "<p><b>Price: $" + place.price + " per night</b></p>" +
             "<p>Description: " + (place.description || "") + "</p>" +
             "<p>Amenities:</p>" +
             "<ul>" + amenitiesList + "</ul>";
@@ -296,23 +296,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const reviewsSection = document.getElementById("reviews");
 
         if (reviewsSection) {
-
             reviewsSection.innerHTML = "<h3>Reviews</h3>";
             if (place.reviews && place.reviews.length > 0) {
-                place.reviews.forEach(review => {
+                await Promise.all(place.reviews.map(async (review) => {
+                    const answer = await fetch(API_URL + "/api/v1/users/" + review.user_id);
+                    console.log(answer)
+                    const revuser = await answer.json();
+                    console.log(revuser)
                     const card = document.createElement("div");
-                    const answer = fetch(API_URL + "/api/v1/users/" + review.user_id);
-                    const revuser = answer.json();
                     card.className = "review-card";
                     card.innerHTML =
-                    "<p>\"" + review.text + "\"</p>" +
-                    "<p>User: " + review.revuser + "</p>" +
-                    "<p>Rating: " + 
-                    "★".repeat(review.rating) +
-                    "☆".repeat(5 - review.rating) +
-                    "</p>";
+                        "<p><i>\"" + review.text + "\"</i></p>" +
+                        "<p><b>User: " + revuser.first_name + " " + revuser.last_name + "</b></p>" +
+                        "<p>Rating: " + "★".repeat(review.rating) + "☆".repeat(5 - review.rating) + "</p>";
                     reviewsSection.appendChild(card);
-                });
+                }));
             } else {
                 reviewsSection.innerHTML += "<p>No reviews yet.</p>";
             }
@@ -364,7 +362,78 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+    const addPlaceForm = document.getElementById("add-place-form");
+    if (addPlaceForm) {
+        const token = getCookie("token");
+        const userId = getCookie("user_id");
 
+        async function loadAmenities() {
+            try {
+                const response = await fetch(API_URL + "/api/v1/amenities/");
+                if (response.ok) {
+                    const amenities = await response.json();
+                    const amenitiesList = document.getElementById("amenities-list");
+                    amenities.forEach(amenity => {
+                        const label = document.createElement("label");
+                        label.style.flexDirection = "row";
+                        label.style.alignItems = "center";
+                        label.style.gap = "8px";
+                        const checkbox = document.createElement("input");
+                        checkbox.type = "checkbox";
+                        checkbox.value = amenity.id;
+                        checkbox.id = "amenity-" + amenity.id;
+                        label.appendChild(checkbox);
+                        label.appendChild(document.createTextNode(amenity.name));
+                        amenitiesList.appendChild(label);
+                    });
+                }
+            } catch (error) {
+                console.log("Error loading amenities: " + error.message);
+            }
+        }
+        
+        loadAmenities();
+
+        addPlaceForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+        
+            const name = document.getElementById("name").value;
+            const description = document.getElementById("description").value;
+            const price = parseFloat(document.getElementById("price").value);
+        
+            const selectedAmenities = [];
+            document.querySelectorAll("#amenities-list input[type='checkbox']:checked").forEach(cb => {
+                selectedAmenities.push(cb.value);
+            });
+        
+            try {
+                const response = await fetch(API_URL + "/api/v1/places/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        description: description,
+                        price: price,
+                        owner_id: userId,
+                        amenity_ids: selectedAmenities
+                    })
+                });
+        
+                if (response.ok) {
+                    alert("Place added successfully!");
+                    window.location.href = "index.html";
+                } else {
+                    const errorData = await response.json();
+                    alert("Failed to add place: " + (errorData.error || response.statusText));
+                }
+            } catch (error) {
+                alert("Error adding place: " + error.message);
+            }
+        });
+    }
     function getCookie(name) {
         const value = "; " + document.cookie;
         const parts = value.split("; " + name + "=");
@@ -384,4 +453,4 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         return token;
     }
-});
+})

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Review</title>
+    <title>Add Place</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/png" href="images/icon.png">
 </head>
@@ -15,27 +15,27 @@
             <a href="login.html" id="login-link">Login</a>
             <a href="register.html" id="register-link">Register</a>
             <a href="#" id="logout-link" style="display: none;">Logout</a>
-            <span id="user-greeting" style="margin-left: 15px;"></span>
         </nav>
+        <span id="user-greeting"></span>
     </header>
 
     <main>
-        <h1>Beach House</h1>
-        <form id="review-form" class="form add-review">
-            <h2>Add a Review</h2>
-            <label for="review">Your Review:</label>
-            <textarea id="review" name="review" required></textarea>
+        <form id="add-place-form" class="form login-form">
+            <h2>Add a Place</h2>
 
-            <label for="rating">Rating:</label>
-            <select id="rating" name="rating" required>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select>
+            <label for="name">Name:</label>
+            <input type="text" id="name" required>
 
-            <button type="submit">Submit Review</button>
+            <label for="description">Description:</label>
+            <textarea id="description" required></textarea>
+
+            <label for="price">Price per night:</label>
+            <input type="number" id="price" min="0" required>
+            
+            <label>Amenities:</label>
+            <div id="amenities-list"></div>
+
+            <button type="submit">Add Place</button>
         </form>
     </main>
 

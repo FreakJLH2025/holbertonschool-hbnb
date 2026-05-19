@@ -76,6 +76,7 @@ class Place(BaseModel):
                     "id": r.id,
                     "text": r.text,
                     "rating": r.rating,
+                    "user_id": r.user_id
                     
                 }
                 for r in self.reviews

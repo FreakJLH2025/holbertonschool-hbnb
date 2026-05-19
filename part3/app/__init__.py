@@ -41,9 +41,9 @@ def create_app(config_name='default'):
     def serve_place():
         return send_from_directory('/root/part4/base_files', 'place.html')
 
-    @app.route('/add_review.html')
-    def serve_add_review():
-        return send_from_directory('/root/part4/base_files', 'add_review.html')
+    @app.route('/add_place.html')
+    def serve_add_place():
+        return send_from_directory('/root/part4/base_files', 'add_place.html')
 
     @app.route('/<path:path>')
     def serve_static(path):
