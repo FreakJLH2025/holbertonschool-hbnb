@@ -1,16 +1,25 @@
-const API_URL = "https://web-80-154-127.cod-us-east-1.hbtn.io";
+const API_URL = "https://web-80-30-173.cod-us-east-1.hbtn.io";
 
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("SCRIPT RUNNING");
     const token = getCookie("token");
     const currentPage = window.location.pathname.split("/").pop();
     const publicPages = ["login.html", "register.html"];
     if (!token && !publicPages.includes(currentPage)) {
-    window.location.href = "login.html";
-}
+    window.location.href = "login.html?message=login_required";
+    }
+    
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("message") === "login_required") {
+        alert("You have to login first!");
+    }
+
     const userGreeting = document.getElementById("user-greeting");
     const loginForm = document.getElementById("login-form");
     if (loginForm) {
         loginForm.addEventListener("submit", async (event) => {
+            console.log("LOGIN CLICKED");
             event.preventDefault();
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
@@ -187,7 +196,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		console.log(places);
                 displayPlaces(places);
                 setupFilter();
-            } else {
+            } 
+            else {
                 alert("Failed to fetch places");
             }
         } catch (error) {
