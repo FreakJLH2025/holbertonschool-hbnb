@@ -1,4 +1,4 @@
-const API_URL = "https://web-80-158-58.cod-us-east-1.hbtn.io";
+const API_URL = "https://web-80-218-221.cod-us-east-1.hbtn.io";
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("SCRIPT RUNNING");
@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             } catch (error) {
                 alert("Error connecting to server: " + error.message);
+                console.log(error)
             }
         });
     }
