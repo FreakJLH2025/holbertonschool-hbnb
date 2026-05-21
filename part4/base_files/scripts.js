@@ -1,4 +1,4 @@
-const API_URL = "https://holbertonschool-hbnbv2-team.onrender.com";
+const API_URL = "https://holbertonschool-hbnbv2-team.onrender.com/";
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("SCRIPT RUNNING");
