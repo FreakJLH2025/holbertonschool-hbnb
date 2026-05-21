@@ -1,3 +1,4 @@
+import os
 from flask import Flask, send_from_directory
 from flask_restx import Api
 from flask_bcrypt import Bcrypt
@@ -9,6 +10,9 @@ from config import config
 bcrypt = Bcrypt()
 jwt = JWTManager()
 db = SQLAlchemy()
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+FRONTEND_PATH = os.path.join(BASE_DIR, 'part4', 'base_files')
 
 authorizations = {
     'Bearer': {
@@ -31,23 +35,31 @@ def create_app(config_name='default'):
     @app.route('/')
     @app.route('/index.html')
     def serve_index():
-        return send_from_directory('/root/part4/base_files', 'index.html')
+        return send_from_directory(FRONTEND_PATH, 'index.html')
 
     @app.route('/login.html')
     def serve_login():
-        return send_from_directory('/root/part4/base_files', 'login.html')
+        return send_from_directory(FRONTEND_PATH, 'login.html')
 
     @app.route('/place.html')
     def serve_place():
-        return send_from_directory('/root/part4/base_files', 'place.html')
+        return send_from_directory(FRONTEND_PATH, 'place.html')
+
+    @app.route('/add_review.html')
+    def serve_add_review():
+        return send_from_directory(FRONTEND_PATH, 'add_review.html')
 
     @app.route('/add_place.html')
     def serve_add_place():
-        return send_from_directory('/root/part4/base_files', 'add_place.html')
+        return send_from_directory(FRONTEND_PATH, 'add_place.html')
+
+    @app.route('/register.html')
+    def serve_register():
+        return send_from_directory(FRONTEND_PATH, 'register.html')
 
     @app.route('/<path:path>')
     def serve_static(path):
-        return send_from_directory('/root/part4/base_files', path)
+        return send_from_directory(FRONTEND_PATH, path)
 
     api = Api(
         app,
